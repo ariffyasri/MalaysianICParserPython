@@ -24,23 +24,22 @@
 # authors and should not be interpreted as representing official policies, either expressed
 # or implied, of sweemeng.
 
-import urllib2
-from BeautifulSoup import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup
 import json
 
 class NRDLocal:
     def __init__(self):
-        self.url = 'http://www.jpn.gov.my/en/informasi/states-code'
-        self.page = urllib2.urlopen(self.url)
-        self.soup = BeautifulSoup(self.page)
+        self.url = 'https://www.jpn.gov.my/en/kod-negeri/'
+        self.page = requests.get(self.url, verify=False).text
+        self.soup = BeautifulSoup(self.page, 'html.parser')
         self.data = {}
     
         tbody = self.soup.findAll('tbody')
-        for i in tbody[0].findAll('tr')[1:]:
+        for i in tbody[0].findAll('tr'):
             row = i.findAll('td')
             for j in row[1].text.split(','):
-                
-                self.data[j.replace(' ','')] = row[0].text
+                self.data[j.replace(' ','')] = row[0].text.strip()
     
     def to_json(self):
         return json.dumps(self.data)

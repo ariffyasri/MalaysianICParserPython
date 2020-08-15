@@ -24,23 +24,27 @@
 # authors and should not be interpreted as representing official policies, either expressed
 # or implied, of sweemeng.
 
-import urllib2
-from BeautifulSoup import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup
 import json
 
 class NRDOversea:
     def __init__(self):
-        self.url = 'http://www.jpn.gov.my/en/informasi/countrys-code'
-        self.page = urllib2.urlopen(self.url)
-        self.soup = BeautifulSoup(self.page)
+        self.url = 'https://www.jpn.gov.my/en/kod-negara/'
+        self.page = requests.get(self.url, verify=False).text
+        self.soup = BeautifulSoup(self.page, 'html.parser')
         self.data = {}
-    
+
+        # panel_body = self.soup.findAll('div', {'class': 'vc_tta-panel-body'})
+        # for body in panel_body:
         tbody = self.soup.findAll('tbody')
-        for i in tbody[0].findAll('tr')[2:]:
-            row = i.findAll('td')
-            if row[0].text != '&nbsp;':
-                self.assemble_data(row[1].text,row[0].text)
-            self.assemble_data(row[3].text,row[2].text)
+        if len(tbody) > 0:
+            for tbodytr in tbody:
+                for i in tbodytr.findAll('tr'):
+                    row = i.findAll('td')
+                    if len(row)== 4:
+                        self.assemble_data(row[3].text.strip(), row[2].text.title().strip())
+                    self.assemble_data(row[1].text.strip(), row[0].text.title().strip())
     
     def assemble_data(self,key,value):
         if self.data.get(key):

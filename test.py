@@ -60,13 +60,13 @@ class NRICTestCase(unittest.TestCase):
         self.assertRaises(ValueError,ICParser,ic)
     
     def test_date_in_future(self):
-        ic = '120312145543'
+        ic = '320312145543'
         self.assertRaises(DateInFutureException,ICParser,ic) 
     
     def test_date_in_past(self):
         ic = '840312145543'
         parser = ICParser(ic)
-        birthdate = datetime.date(1984,03,12)
+        birthdate = datetime.date(1984,3,12)
         self.assertEqual(parser.birth_date,birthdate)
 
     def test_ic_less_12_year(self):
@@ -82,11 +82,11 @@ class NRICTestCase(unittest.TestCase):
     def test_birthplace_oversea_valid(self):
         ic = '840312895543'
         parser = ICParser(ic)
-        birth_place = 'Japan,Korea Selatan,Korea Utara,Taiwan'
+        birth_place = 'Japan,Korea (Selatan),Korea (Utara),Taiwan,Timur Jauh'
         self.assertEqual(parser.birth_place,birth_place)
    
     def test_birthplace_invalid(self):
-        ic = '840312995543'
+        ic = '840312945543'
         self.assertRaises(InvalidBirthPlace,ICParser,ic)
 
     def test_birthplace_data_on_file(self):
@@ -113,3 +113,5 @@ class NRICTestCase(unittest.TestCase):
         parser = ICParser(ic)
         self.assertEqual(parser.gender,'F') 
 
+if __name__ == '__main__':
+    unittest.main()

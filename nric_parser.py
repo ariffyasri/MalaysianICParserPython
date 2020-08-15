@@ -72,7 +72,8 @@ class ICParser:
     
     def set_birth_place(self):
         if self.state_file:
-            data = json.load(open(self.state_file))
+            with open(self.state_file, 'r') as f:
+                data = json.load(f)
         else:
             local = NRDLocal()
             data = local.data
@@ -86,7 +87,8 @@ class ICParser:
             pass            
 
         if self.country_file:
-            data = json.load(open(self.country_file))
+            with open(self.country_file, 'r') as f:
+                data = json.load(f)
         else:
             oversea = NRDOversea()
             data = oversea.data
