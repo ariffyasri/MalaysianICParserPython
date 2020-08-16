@@ -53,7 +53,17 @@ class ICParser:
         self.set_birth_place()
 
     def set_birth_date(self):
-        self.birth_date = parse(self.ic_token[0]).date()
+        year = int(self.ic_token[0][:2])
+        today_year = int(str(datetime.date.today().year)[2:])
+
+        # if ic year more than current year, 
+        # add 19 (assuming age can max to 100 years old), 
+        # else add 20
+        if year > today_year:
+            self.birth_date = parse('19'+self.ic_token[0]).date()
+        else:
+            self.birth_date = parse('20'+self.ic_token[0]).date()
+
         if self.birth_date > datetime.date.today():
             raise DateInFutureException(self.birth_date)
 
